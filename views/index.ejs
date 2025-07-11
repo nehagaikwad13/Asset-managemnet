@@ -1,0 +1,56 @@
+<% 
+const title = 'Dashboard - AssetFlow';
+const body = `
+<h2 class="text-2xl font-semibold mb-6">Welcome, Admin 👋</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6 mb-10">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-medium">Total Assets</h3>
+    <p class="text-2xl font-bold text-blue-700 mt-2">${stats.total}</p>
+  </div>
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-medium">Assigned</h3>
+    <p class="text-2xl font-bold text-green-600 mt-2">${stats.assigned}</p>
+  </div>
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-medium">Available</h3>
+    <p class="text-2xl font-bold text-yellow-500 mt-2">${stats.available}</p>
+  </div>
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-medium">Reports</h3>
+    <p class="text-2xl font-bold text-purple-500 mt-2">${stats.reports}</p>
+  </div>
+</div>
+
+<section>
+  <h3 class="text-xl font-semibold mb-4">Asset Overview</h3>
+  <div class="overflow-x-auto bg-white shadow rounded-lg">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-100 text-gray-600 font-medium">
+        <tr>
+          <th class="p-4 text-left">Product Name</th>
+          <th class="p-4 text-left">Type</th>
+          <th class="p-4 text-left">Model</th>
+          <th class="p-4 text-left">Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        ${assets.map(asset => `
+        <tr>
+          <td class="p-4">${asset.name}</td>
+          <td class="p-4">${asset.type}</td>
+          <td class="p-4">${asset.model}</td>
+          <td class="p-4">
+            <span class="${asset.assigned ? 'text-red-500' : 'text-green-600'} font-semibold">
+              ${asset.assigned ? 'Assigned' : 'Available'}
+            </span>
+          </td>
+        </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  </div>
+</section>
+`;
+%>
+<%- include('layout', { title, body }) %>
