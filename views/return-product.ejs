@@ -1,0 +1,28 @@
+<% 
+const title = 'Return Product - AssetFlow';
+const body = `
+<div class="flex items-center justify-center">
+  <div class="bg-white w-full max-w-2xl p-8 rounded-lg shadow-xl">
+    <h2 class="text-2xl font-bold text-blue-800 text-center mb-8">Return Product</h2>
+    
+    <form action="/return-product" method="POST" class="space-y-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Select Product to Return</label>
+        <select name="assetId" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" required>
+          <option value="">Select assigned product</option>
+          ${assets.map(asset => `
+          <option value="${asset.id}">${asset.name} - ${asset.employee}</option>
+          `).join('')}
+        </select>
+      </div>
+      
+      <div class="flex justify-center space-x-4">
+        <button type="submit" class="bg-blue-700 text-white px-6 py-2 rounded hover:bg-blue-800">Return Product</button>
+        <a href="/" class="bg-gray-300 text-gray-800 px-6 py-2 rounded hover:bg-gray-400">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+%>
+<%- include('layout', { title, body }) %>
