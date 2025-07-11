@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Return Product - AssetFlow</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div class="bg-white w-full max-w-6xl p-8 rounded-lg shadow-xl">
+        <h2 class="text-2xl font-bold text-blue-800 text-center mb-8">Return Product</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+          <!-- Assigned Details -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Assigned Details</h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Product Serial No</label>
+                <input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Product Description</label>
+                <input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Model No <span class="text-red-500">*</span></label>
+                <input type="text" required class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Product Type</label>
+                <select class="mt-1 w-full rounded-md border-gray-300 shadow-sm">
+                  <option value="">Select type</option>
+                  <option value="Hardware">Hardware</option>
+                  <option value="Software">Software</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">MQI Serial No</label>
+                <input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Quantity</label>
+                <input type="number" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Employee ID</label>
+                <input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Employee Name</label>
+                <input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Assigned By</label>
+                <input type="text" placeholder="Auto-filled" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Date Assigned</label>
+                <input type="date" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Received By -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Received By</h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Name</label>
+                <input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Date</label>
+                <input type="date" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Product Issue (Optional)</label>
+                <textarea rows="3" class="mt-1 w-full rounded-md border-gray-300 shadow-sm"></textarea>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Upload Product Photo</label>
+                <input type="file" accept="image/*" class="mt-1 block w-full text-sm text-gray-600" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="mt-10 flex justify-center space-x-4">
+          <button class="bg-blue-700 text-white px-6 py-2 rounded hover:bg-blue-800">Return</button>
+          <button class="bg-gray-300 text-gray-800 px-6 py-2 rounded hover:bg-gray-400">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

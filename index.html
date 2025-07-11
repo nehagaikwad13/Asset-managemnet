@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AssetFlow Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <div class="min-h-screen flex">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-blue-800 text-white flex flex-col p-6 space-y-6 shadow-lg">
+        <h1 class="text-2xl font-bold mb-4">AssetFlow</h1>
+        <nav class="flex-1 space-y-4 text-sm font-medium">
+          <a href="index.html" class="block py-2 px-4 rounded hover:bg-blue-700">Dashboard</a>
+          <a href="add-product.html" class="block py-2 px-4 rounded hover:bg-blue-700">Add Product</a>
+          <a href="assign-product.html" class="block py-2 px-4 rounded hover:bg-blue-700">Assign Product</a>
+          <a href="view.database.html" class="block py-2 px-4 rounded hover:bg-blue-700">View Database</a>
+          <a href="return-product.html" class="block py-2 px-4 rounded hover:bg-blue-700">Return Product</a>
+          <a href="reports.html" class="block py-2 px-4 rounded hover:bg-blue-700">Reports</a>
+        </nav>
+        <a href="login.html" class="mt-auto text-sm py-2 px-4 rounded bg-red-600 text-center hover:bg-red-700">Logout</a>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-6">
+        <h2 class="text-2xl font-semibold mb-6">Welcome, Admin 👋</h2>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6 mb-10">
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-600 text-sm font-medium">Total Assets</h3>
+            <p class="text-2xl font-bold text-blue-700 mt-2">145</p>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-600 text-sm font-medium">Assigned</h3>
+            <p class="text-2xl font-bold text-green-600 mt-2">86</p>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-600 text-sm font-medium">Available</h3>
+            <p class="text-2xl font-bold text-yellow-500 mt-2">59</p>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-gray-600 text-sm font-medium">Reports</h3>
+            <p class="text-2xl font-bold text-purple-500 mt-2">12</p>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <section>
+          <h3 class="text-xl font-semibold mb-4">Asset Overview</h3>
+          <div class="overflow-x-auto bg-white shadow rounded-lg">
+            <table class="min-w-full text-sm">
+              <thead class="bg-gray-100 text-gray-600 font-medium">
+                <tr>
+                  <th class="p-4 text-left">Product Name</th>
+                  <th class="p-4 text-left">Category</th>
+                  <th class="p-4 text-left">Stock</th>
+                  <th class="p-4 text-left">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr>
+                  <td class="p-4">vector</td>
+                  <td class="p-4">battery</td>
+                  <td class="p-4">25</td>
+                  <td class="p-4"><span class="text-green-600 font-semibold">In Stock</span></td>
+                </tr>
+                <tr>
+                  <td class="p-4">HP Monitor</td>
+                  <td class="p-4">Electronics</td>
+                  <td class="p-4">10</td>
+                  <td class="p-4"><span class="text-red-500 font-semibold">Low Stock</span></td>
+                </tr>
+                <tr>
+                  <td class="p-4">USB</td>
+                  <td class="p-4">Electronics</td>
+                  <td class="p-4">10</td>
+                  <td class="p-4"><span class="text-blue-700">Mid level</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
