@@ -1,0 +1,24 @@
+<% 
+const title = 'Login - AssetFlow';
+const showSidebar = false;
+const body = `
+<div class="flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+    <h2 class="text-2xl font-bold text-center text-blue-800 mb-6">AssetFlow Login</h2>
+    
+    <form action="/" method="GET" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Username</label>
+        <input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" required>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" required>
+      </div>
+      <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800">Login</button>
+    </form>
+  </div>
+</div>
+`;
+%>
+<%- include('layout', { title, body, showSidebar }) %>
