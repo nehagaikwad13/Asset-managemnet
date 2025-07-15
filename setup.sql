@@ -1,0 +1,14 @@
+CREATE DATABASE IF NOT EXISTS asset_management;
+USE asset_management;
+
+CREATE TABLE IF NOT EXISTS assets (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  type VARCHAR(100) NOT NULL,
+  model VARCHAR(255),
+  serial VARCHAR(255) UNIQUE,
+  assigned BOOLEAN DEFAULT FALSE,
+  employee VARCHAR(255),
+  dateAssigned DATE,
+  returned BOOLEAN DEFAULT FALSE
+);

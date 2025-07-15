@@ -4,15 +4,12 @@
   "description": "Asset Management System",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "express": "^4.18.2",
+    "body-parser": "^1.20.2",
     "ejs": "^3.1.9",
-    "body-parser": "^1.20.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
+    "mysql2": "^3.6.5"
   }
 }

@@ -1,17 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const db = require('./database');
 
 const app = express();
-const PORT = 8080;
+const PORT = 3000;
 
-// Sample data
-let assets = [
-  { id: 1, name: 'Dell Laptop', type: 'Hardware', model: 'Latitude 5430', serial: 'DL5430-2023', assigned: true, employee: 'John Doe', dateAssigned: '2024-11-01', returned: false },
-  { id: 2, name: 'Office Suite', type: 'Software', model: 'v2023', serial: 'SWOFF-333', assigned: false, employee: null, dateAssigned: null, returned: false }
-];
-
-let stats = { total: 145, assigned: 86, available: 59, reports: 12 };
+// Database functions
+const getAssets = () => {
+  return new Promise((resolve, reject) => {
+    db.query('SELECT * FROM assets', (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+};
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,9 +22,16 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Routes
-app.get('/', (req, res) => {
-  res.render('index', { stats, assets, showSidebar: true }); // or false, as needed
+// Routes 
+app.get('/', async (req, res) => {
+  try {
+    const assets = await getAssets();
+    const stats = { total: assets.length, assigned: assets.filter(a => a.assigned).length, available: assets.filter(a => !a.assigned).length, reports: 12 };
+    res.render('index', { stats, assets, showSidebar: true });
+  } catch (err) {
+    console.error(err);
+    res.render('index', { stats: {total: 0, assigned: 0, available: 0, reports: 0}, assets: [], showSidebar: true });
+  }
 });
 
 app.get('/add-product', (req, res) => {
@@ -29,57 +39,76 @@ app.get('/add-product', (req, res) => {
 });
 
 app.post('/add-product', (req, res) => {
-  const newAsset = {
-    id: assets.length + 1,
-    name: req.body.name,
-    type: req.body.type,
-    model: req.body.model || 'N/A',
-    serial: req.body.serial,
-    assigned: false,
-    employee: null,
-    dateAssigned: null,
-    returned: false
-  };
-  assets.push(newAsset);
-  res.redirect('/');
+  const query = 'INSERT INTO assets (name, type, model, serial) VALUES (?, ?, ?, ?)';
+  db.query(query, [req.body.name, req.body.type, req.body.model || 'N/A', req.body.serial], (err) => {
+    if (err) console.error(err);
+    res.redirect('/');
+  });
 });
 
-app.get('/assign-product', (req, res) => {
-  res.render('assign-product', { assets: assets.filter(a => !a.assigned) });
+app.get('/assign-product', async (req, res) => {
+  try {
+    const assets = await getAssets();
+    const availableAssets = assets.filter(a => !a.assigned);
+    res.render('assign-product', { assets: availableAssets });
+  } catch (err) {
+    console.error(err);
+    res.render('assign-product', { assets: [] });
+  }
 });
 
 app.post('/assign-product', (req, res) => {
   const assetId = parseInt(req.body.assetId);
-  const asset = assets.find(a => a.id === assetId);
-  if (asset) {
-    asset.assigned = true;
-    asset.employee = req.body.employeeName;
-    asset.dateAssigned = req.body.dateAssigned;
+  const query = 'UPDATE assets SET assigned = true, employee = ?, dateAssigned = ? WHERE id = ?';
+  db.query(query, [req.body.employeeName, req.body.dateAssigned, assetId], (err) => {
+    if (err) console.error(err);
+    res.redirect('/view-database');
+  });
+});
+
+// View all assets from database
+app.get('/view-database', async (req, res) => {
+  try {
+    const assets = await getAssets(); // Get all assets from MySQL
+    res.render('view-database', { assets });
+  } catch (err) {
+    console.error(err);
+    res.render('view-database', { assets: [] }); // Show empty list if database fails
   }
-  res.redirect('/view-database');
 });
 
-app.get('/view-database', (req, res) => {
-  res.render('view-database', { assets });
+// Show assigned assets that can be returned
+app.get('/return-product', async (req, res) => {
+  try {
+    const assets = await getAssets(); // Get all assets from MySQL database
+    const assignedAssets = assets.filter(a => a.assigned); // Keep only assets that are assigned to employees
+    res.render('return-product', { assets: assignedAssets }); // Send assigned assets to return page
+  } catch (err) {
+    console.error('Error getting assets for return:', err);
+    res.render('return-product', { assets: [] }); // Show empty list if database connection fails
+  }
 });
 
-app.get('/return-product', (req, res) => {
-  res.render('return-product', { assets: assets.filter(a => a.assigned) });
-});
-
+// Process asset return - mark as available
 app.post('/return-product', (req, res) => {
-  const assetId = parseInt(req.body.assetId);
-  const asset = assets.find(a => a.id === assetId);
-  if (asset) {
-    asset.assigned = false;
-    asset.returned = true;
-    asset.employee = null;
-  }
-  res.redirect('/view-database');
+  const assetId = parseInt(req.body.assetId); // Get asset ID from form
+  // Update database: set assigned=false, returned=true, remove employee
+  const query = 'UPDATE assets SET assigned = false, returned = true, employee = NULL WHERE id = ?';
+  db.query(query, [assetId], (err) => {
+    if (err) console.error('Error returning asset:', err);
+    res.redirect('/view-database'); // Go back to database view
+  });
 });
 
-app.get('/reports', (req, res) => {
-  res.render('reports', { assets });
+// Generate reports from database data
+app.get('/reports', async (req, res) => {
+  try {
+    const assets = await getAssets(); // Get all assets from MySQL database
+    res.render('reports', { assets }); // Send all assets to reports page for analysis and charts
+  } catch (err) {
+    console.error('Error getting assets for reports:', err);
+    res.render('reports', { assets: [] }); // Show empty reports if database connection fails
+  }
 });
 
 app.get('/login', (req, res) => {
