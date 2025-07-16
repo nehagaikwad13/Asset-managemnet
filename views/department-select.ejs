@@ -1,0 +1,24 @@
+<%
+const title = 'Select Department - AssetFlow';
+const body = `
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+  <div class="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
+    <div class="text-center">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">AssetFlow</h1>
+      <p class="text-gray-600">Select your department to continue</p>
+    </div>
+    
+    <div class="space-y-4">
+      ${departments.map(dept => `
+        <a href="/login?dept=${dept.id}" 
+           class="w-full flex items-center justify-center px-6 py-4 border border-gray-300 rounded-lg text-lg font-medium text-gray-700 bg-white hover:bg-gray-50 hover:border-blue-500 transition-colors">
+          <span class="text-2xl mr-3">${dept.name === 'IT' ? '💻' : '👥'}</span>
+          ${dept.name} Department
+        </a>
+      `).join('')}
+    </div>
+  </div>
+</div>
+`;
+%>
+<%- include('layout', { title, body, showSidebar: false }) %>

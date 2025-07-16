@@ -21,17 +21,73 @@
 <body class="bg-gray-100 text-gray-800">
   <div class="min-h-screen flex">
     <% if (typeof showSidebar === 'undefined' || showSidebar) { %>
-    <aside class="w-64 bg-blue-800 text-white flex flex-col p-6 space-y-6 shadow-lg">
-      <h1 class="text-2xl font-bold mb-4">AssetFlow</h1>
-      <nav class="flex-1 space-y-4 text-sm font-medium">
-        <a href="/" class="block py-2 px-4 rounded hover:bg-blue-700">Dashboard</a>
-        <a href="/add-product" class="block py-2 px-4 rounded hover:bg-blue-700">Add Product</a>
-        <a href="/assign-product" class="block py-2 px-4 rounded hover:bg-blue-700">Assign Product</a>
-        <a href="/view-database" class="block py-2 px-4 rounded hover:bg-blue-700">View Database</a>
-        <a href="/return-product" class="block py-2 px-4 rounded hover:bg-blue-700">Return Product</a>
-        <a href="/reports" class="block py-2 px-4 rounded hover:bg-blue-700">Reports</a>
+    <aside class="w-64 bg-gradient-to-b from-blue-800 to-blue-900 text-white flex flex-col shadow-xl">
+      <div class="p-6">
+        <h1 class="text-2xl font-bold mb-4 text-center">🏢 AssetFlow</h1>
+        <% if (typeof user !== 'undefined') { %>
+        <div class="bg-blue-700 bg-opacity-50 p-4 rounded-lg mb-6">
+          <div class="flex items-center space-x-3 mb-2">
+            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-lg font-bold">
+              <%= user.full_name.charAt(0).toUpperCase() %>
+            </div>
+            <div>
+              <p class="font-medium text-sm"><%= user.full_name %></p>
+              <p class="text-blue-200 text-xs capitalize"><%= user.role.replace('_', ' ') %></p>
+            </div>
+          </div>
+          <p class="text-blue-200 text-xs text-center">📍 <%= user.department_name %> Dept</p>
+        </div>
+        <% } %>
+      </div>
+      
+      <nav class="flex-1 px-4 space-y-2">
+        <a href="/dashboard" class="flex items-center space-x-3 py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          <span>🏠</span><span>Dashboard</span>
+        </a>
+        
+        <% if (typeof user !== 'undefined' && user.role === 'core_team') { %>
+        <div class="pt-4 pb-2">
+          <p class="text-blue-300 text-xs font-semibold uppercase tracking-wider px-4">Admin Tools</p>
+        </div>
+        <a href="/add-product" class="flex items-center space-x-3 py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          <span>➕</span><span>Add Asset</span>
+        </a>
+        <a href="/admin/users" class="flex items-center space-x-3 py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          <span>👥</span><span>Manage Users</span>
+        </a>
+        <a href="/return-product" class="flex items-center space-x-3 py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          <span>🔄</span><span>Return Assets</span>
+        </a>
+        <% } %>
+        
+        <% if (typeof user !== 'undefined' && user.role === 'manager') { %>
+        <div class="pt-4 pb-2">
+          <p class="text-blue-300 text-xs font-semibold uppercase tracking-wider px-4">Manager Tools</p>
+        </div>
+        <a href="/manager/requests" class="flex items-center space-x-3 py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          <span>📋</span><span>Pending Requests</span>
+        </a>
+        <% } %>
+        
+        <div class="pt-4 pb-2">
+          <p class="text-blue-300 text-xs font-semibold uppercase tracking-wider px-4">General</p>
+        </div>
+        <a href="/view-database" class="flex items-center space-x-3 py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          <span>🗄️</span><span>View Assets</span>
+        </a>
+        
+        <% if (typeof user !== 'undefined' && (user.role === 'core_team' || user.role === 'manager')) { %>
+        <a href="/reports" class="flex items-center space-x-3 py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          <span>📊</span><span>Reports</span>
+        </a>
+        <% } %>
       </nav>
-      <a href="/login" class="mt-auto text-sm py-2 px-4 rounded bg-red-600 text-center hover:bg-red-700">Logout</a>
+      
+      <div class="p-4">
+        <a href="/logout" class="flex items-center justify-center space-x-2 w-full py-3 px-4 rounded-lg bg-red-600 hover:bg-red-700 transition-colors font-medium">
+          <span>🚪</span><span>Logout</span>
+        </a>
+      </div>
     </aside>
     <% } %>
     

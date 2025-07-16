@@ -1,22 +1,30 @@
-<% 
-const title = 'Login - AssetFlow';
-const showSidebar = false;
+<%
+const title = `Login - ${departmentName} Department`;
 const body = `
 <div class="flex items-center justify-center min-h-screen">
   <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-    <h2 class="text-2xl font-bold text-center text-blue-800 mb-6">AssetFlow Login</h2>
+    <h2 class="text-2xl font-bold text-center text-blue-800 mb-2">AssetFlow</h2>
+    <p class="text-center text-gray-600 mb-6">${departmentName} Department</p>
+    <a href="/" class="text-sm text-blue-600 hover:underline block text-center mb-4">← Change Department</a>
     
-    <form action="/" method="GET" class="space-y-4">
+    ${error ? `<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">${error}</div>` : ''}
+    
+    <form action="/login" method="POST" class="space-y-4">
+      <input type="hidden" name="department" value="${departmentId}">
       <div>
         <label class="block text-sm font-medium text-gray-700">Username</label>
-        <input type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" required>
+        <input name="username" type="text" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" required>
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700">Password</label>
-        <input type="password" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" required>
+        <input name="password" type="password" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" required>
       </div>
       <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800">Login</button>
     </form>
+    
+    <div class="text-xs text-gray-500 text-center mt-4">
+      <p>Demo: admin/password123 | manager1/password123 | user1/password123</p>
+    </div>
   </div>
 </div>
 `;
