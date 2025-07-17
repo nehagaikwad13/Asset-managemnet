@@ -7,3 +7,6 @@ INSERT IGNORE INTO assets (name, type, model, serial, department_id) VALUES
 ('iPhone 13', 'Mobile', 'Apple iPhone 13', 'IP001', 1),
 ('Office Chair', 'Furniture', 'Ergonomic Chair', 'OC001', 2),
 ('Monitor', 'Display', 'Samsung 24"', 'SM001', 1);
+('Projector', 'Display', 'Epson PowerLite', 'EP001', 2);
+-- Verify the inserted sample data
+SELECT * FROM assets;
