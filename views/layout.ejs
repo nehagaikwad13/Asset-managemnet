@@ -91,9 +91,15 @@
     </aside>
     <% } %>
     
-    <main class="<%= showSidebar === false ? 'w-full' : 'flex-1' %> p-6">
-      <%- body %>
-    </main>
+    <div class="<%= showSidebar === false ? 'w-full' : 'flex-1' %> flex flex-col">
+      <% if (typeof user !== 'undefined') { %>
+      <%- include('notification-bar') %>
+      <% } %>
+      
+      <main class="flex-1 p-6">
+        <%- body %>
+      </main>
+    </div>
   </div>
 </body>
 </html>

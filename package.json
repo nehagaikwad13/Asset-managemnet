@@ -12,6 +12,7 @@
     "ejs": "^3.1.9",
     "mysql2": "^3.6.5",
     "express-session": "^1.17.3",
-    "bcrypt": "^5.1.1"
+    "bcrypt": "^5.1.1",
+    "qrcode": "^1.5.3"
   }
 }

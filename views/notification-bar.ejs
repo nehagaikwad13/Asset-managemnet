@@ -1,0 +1,179 @@
+<!-- Notification Bar -->
+<div id="notificationBar" class="bg-white border-b border-gray-200 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-center space-x-4">
+        <button onclick="toggleNotifications()" class="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none">
+          <span class="text-xl">🔔</span>
+          <span id="notificationCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+        </button>
+        <span class="text-sm text-gray-600">Notifications</span>
+      </div>
+      
+      <div class="flex items-center space-x-2">
+        <span id="notificationSummary" class="text-sm text-gray-500">No new notifications</span>
+        <button onclick="markAllRead()" class="text-xs text-blue-600 hover:text-blue-800 hidden" id="markAllBtn">Mark all read</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Notification Dropdown -->
+  <div id="notificationDropdown" class="hidden absolute right-4 top-16 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+    <div class="p-4 border-b border-gray-200">
+      <h3 class="font-semibold text-gray-800">Notifications</h3>
+    </div>
+    <div id="notificationList" class="divide-y divide-gray-200">
+      <!-- Notifications will be loaded here -->
+    </div>
+    <div class="p-4 text-center">
+      <button onclick="loadMoreNotifications()" class="text-sm text-blue-600 hover:text-blue-800">Load more</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let notificationOffset = 0;
+let hasMoreNotifications = true;
+
+// Toggle notification dropdown
+function toggleNotifications() {
+  const dropdown = document.getElementById('notificationDropdown');
+  if (dropdown.classList.contains('hidden')) {
+    dropdown.classList.remove('hidden');
+    loadNotifications();
+  } else {
+    dropdown.classList.add('hidden');
+  }
+}
+
+// Load notifications
+function loadNotifications() {
+  fetch('/api/notifications?offset=' + notificationOffset)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        displayNotifications(data.notifications);
+        updateNotificationCount(data.unreadCount);
+      }
+    })
+    .catch(err => console.error('Error loading notifications:', err));
+}
+
+// Display notifications
+function displayNotifications(notifications) {
+  const list = document.getElementById('notificationList');
+  if (notificationOffset === 0) {
+    list.innerHTML = '';
+  }
+  
+  notifications.forEach(notification => {
+    const notifEl = document.createElement('div');
+    notifEl.className = `p-4 hover:bg-gray-50 ${!notification.is_read ? 'bg-blue-50' : ''}`;
+    notifEl.innerHTML = `
+      <div class="flex items-start space-x-3">
+        <div class="flex-shrink-0">
+          <span class="text-lg">${getNotificationIcon(notification.type)}</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-gray-900">${notification.title}</p>
+          <p class="text-sm text-gray-600">${notification.message}</p>
+          <p class="text-xs text-gray-400 mt-1">${formatDate(notification.created_at)}</p>
+        </div>
+        ${!notification.is_read ? '<div class="w-2 h-2 bg-blue-500 rounded-full"></div>' : ''}
+      </div>
+    `;
+    
+    if (!notification.is_read) {
+      notifEl.onclick = () => markAsRead(notification.id);
+    }
+    
+    list.appendChild(notifEl);
+  });
+}
+
+// Update notification count
+function updateNotificationCount(count) {
+  const countEl = document.getElementById('notificationCount');
+  const summaryEl = document.getElementById('notificationSummary');
+  const markAllBtn = document.getElementById('markAllBtn');
+  
+  if (count > 0) {
+    countEl.textContent = count;
+    countEl.classList.remove('hidden');
+    summaryEl.textContent = `${count} new notification${count > 1 ? 's' : ''}`;
+    markAllBtn.classList.remove('hidden');
+  } else {
+    countEl.classList.add('hidden');
+    summaryEl.textContent = 'No new notifications';
+    markAllBtn.classList.add('hidden');
+  }
+}
+
+// Get notification icon
+function getNotificationIcon(type) {
+  switch(type) {
+    case 'warning': return '⚠️';
+    case 'success': return '✅';
+    case 'error': return '❌';
+    default: return 'ℹ️';
+  }
+}
+
+// Format date
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return date.toLocaleDateString();
+}
+
+// Mark notification as read
+function markAsRead(notificationId) {
+  fetch('/api/notifications/read', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ notificationId })
+  }).then(() => {
+    loadNotifications();
+  });
+}
+
+// Mark all as read
+function markAllRead() {
+  fetch('/api/notifications/read-all', {
+    method: 'POST'
+  }).then(() => {
+    loadNotifications();
+  });
+}
+
+// Load more notifications
+function loadMoreNotifications() {
+  notificationOffset += 10;
+  loadNotifications();
+}
+
+// Auto-refresh notifications every 30 seconds
+setInterval(loadNotifications, 30000);
+
+// Load notifications on page load
+document.addEventListener('DOMContentLoaded', loadNotifications);
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+  const dropdown = document.getElementById('notificationDropdown');
+  const button = event.target.closest('[onclick="toggleNotifications()"]');
+  
+  if (!button && !dropdown.contains(event.target)) {
+    dropdown.classList.add('hidden');
+  }
+});
+</script>
