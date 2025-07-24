@@ -1,0 +1,154 @@
+<%
+const title = 'Admin Dashboard - AssetFlow';
+const body = `
+<div class="mb-6">
+  <h2 class="text-3xl font-bold text-gray-800">Admin Control Center</h2>
+  <p class="text-gray-600">Complete system management and oversight</p>
+</div>
+
+<!-- Quick Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+  <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-medium opacity-90">Total Assets</h3>
+        <p class="text-3xl font-bold mt-2">${stats.total}</p>
+      </div>
+      <div class="text-4xl opacity-80">📦</div>
+    </div>
+  </div>
+  <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-medium opacity-90">Assigned</h3>
+        <p class="text-3xl font-bold mt-2">${stats.assigned}</p>
+      </div>
+      <div class="text-4xl opacity-80">✅</div>
+    </div>
+  </div>
+  <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6 text-white">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-medium opacity-90">Available</h3>
+        <p class="text-3xl font-bold mt-2">${stats.available}</p>
+      </div>
+      <div class="text-4xl opacity-80">🔓</div>
+    </div>
+  </div>
+  <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-medium opacity-90">Total Users</h3>
+        <p class="text-3xl font-bold mt-2">${totalUsers}</p>
+      </div>
+      <div class="text-4xl opacity-80">👥</div>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Actions -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+  <div class="bg-white rounded-xl shadow-lg p-6">
+    <h3 class="text-xl font-semibold mb-4 text-gray-800">🔧 System Management</h3>
+    <div class="space-y-3">
+      <a href="/admin/users" class="block w-full bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-3 rounded-lg transition-colors">
+        👤 Manage Users
+      </a>
+      <a href="/admin/departments" class="block w-full bg-green-50 hover:bg-green-100 text-green-700 px-4 py-3 rounded-lg transition-colors">
+        🏢 Manage Departments
+      </a>
+      <a href="/admin/system-settings" class="block w-full bg-purple-50 hover:bg-purple-100 text-purple-700 px-4 py-3 rounded-lg transition-colors">
+        ⚙️ System Settings
+      </a>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-lg p-6">
+    <h3 class="text-xl font-semibold mb-4 text-gray-800">📊 Quick Actions</h3>
+    <div class="space-y-3">
+      <a href="/add-product" class="block w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-3 rounded-lg transition-colors">
+        ➕ Add New Asset
+      </a>
+      <a href="/bulk-import" class="block w-full bg-orange-50 hover:bg-orange-100 text-orange-700 px-4 py-3 rounded-lg transition-colors">
+        📥 Bulk Import
+      </a>
+      <a href="/export-data" class="block w-full bg-teal-50 hover:bg-teal-100 text-teal-700 px-4 py-3 rounded-lg transition-colors">
+        📤 Export Data
+      </a>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-lg p-6">
+    <h3 class="text-xl font-semibold mb-4 text-gray-800">📈 Analytics</h3>
+    <div class="space-y-3">
+      <a href="/admin/analytics" class="block w-full bg-pink-50 hover:bg-pink-100 text-pink-700 px-4 py-3 rounded-lg transition-colors">
+        📊 Usage Analytics
+      </a>
+      <a href="/admin/audit-log" class="block w-full bg-red-50 hover:bg-red-100 text-red-700 px-4 py-3 rounded-lg transition-colors">
+        📋 Audit Logs
+      </a>
+      <a href="/reports" class="block w-full bg-cyan-50 hover:bg-cyan-100 text-cyan-700 px-4 py-3 rounded-lg transition-colors">
+        📄 Generate Reports
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Activity & Asset Overview -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+  <section class="bg-white rounded-xl shadow-lg p-6">
+    <h3 class="text-xl font-semibold mb-4 text-gray-800">📋 Recent Assets</h3>
+    <div class="overflow-hidden">
+      <table class="min-w-full">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Asset</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          ${assets.slice(0, 5).map(asset => `
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 text-sm font-medium text-gray-900">${asset.name}</td>
+            <td class="px-4 py-3 text-sm text-gray-600">${asset.type}</td>
+            <td class="px-4 py-3">
+              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${asset.assigned ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">
+                ${asset.assigned ? '🔒 Assigned' : '🔓 Available'}
+              </span>
+            </td>
+          </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-4">
+      <a href="/view-database" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View All Assets →</a>
+    </div>
+  </section>
+
+  <section class="bg-white rounded-xl shadow-lg p-6">
+    <h3 class="text-xl font-semibold mb-4 text-gray-800">🎯 System Health</h3>
+    <div class="space-y-4">
+      <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+        <span class="text-sm font-medium text-green-800">Database Status</span>
+        <span class="text-green-600">🟢 Online</span>
+      </div>
+      <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+        <span class="text-sm font-medium text-blue-800">Active Sessions</span>
+        <span class="text-blue-600">${activeUsers || 0}</span>
+      </div>
+      <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+        <span class="text-sm font-medium text-yellow-800">Pending Requests</span>
+        <span class="text-yellow-600">${pendingRequests || 0}</span>
+      </div>
+      <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+        <span class="text-sm font-medium text-purple-800">System Uptime</span>
+        <span class="text-purple-600">99.9%</span>
+      </div>
+    </div>
+  </section>
+</div>
+`;
+%>
+<%- include('layout', { title, body, showSidebar: true, user }) %>

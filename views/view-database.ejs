@@ -15,25 +15,38 @@ const body = `
         <tr>
           <th class="p-3 border">Product Name</th>
           <th class="p-3 border">Type</th>
-          <th class="p-3 border">Model</th>
+          <th class="p-3 border">Category</th>
           <th class="p-3 border">Serial No</th>
-          <th class="p-3 border">Assigned</th>
-          <th class="p-3 border">Employee</th>
-          <th class="p-3 border">Date Assigned</th>
-          <th class="p-3 border">Returned</th>
+          <th class="p-3 border">Status</th>
+          <th class="p-3 border">QR Code</th>
+          <th class="p-3 border">Actions</th>
         </tr>
       </thead>
       <tbody class="text-gray-800">
         ${assets.map(asset => `
-        <tr class="border-t">
-          <td class="p-3 border">${asset.name}</td>
+        <tr class="border-t hover:bg-gray-50">
+          <td class="p-3 border font-medium">${asset.name}</td>
           <td class="p-3 border">${asset.type}</td>
-          <td class="p-3 border">${asset.model}</td>
-          <td class="p-3 border">${asset.serial}</td>
-          <td class="p-3 border">${asset.assigned ? 'Yes' : 'No'}</td>
-          <td class="p-3 border">${asset.employee || '-'}</td>
-          <td class="p-3 border">${asset.dateAssigned || '-'}</td>
-          <td class="p-3 border">${asset.returned ? 'Yes' : '-'}</td>
+          <td class="p-3 border capitalize">${asset.product_category || 'General'}</td>
+          <td class="p-3 border text-sm">${asset.serial || 'N/A'}</td>
+          <td class="p-3 border">
+            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+              asset.assigned ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+            }">
+              ${asset.assigned ? '🔒 Assigned' : '🔓 Available'}
+            </span>
+            ${asset.requires_calibration && asset.next_calibration_date && new Date(asset.next_calibration_date) < new Date() ? 
+              '<br><span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 mt-1">⚠️ Cal. Due</span>' : ''}
+          </td>
+          <td class="p-3 border text-center">
+            ${asset.qr_code_path ? 
+              '<a href="/asset/' + asset.id + '" class="text-blue-600 hover:text-blue-800">📱 View QR</a>' : 
+              '<span class="text-gray-400">No QR</span>'
+            }
+          </td>
+          <td class="p-3 border">
+            <a href="/asset/${asset.id}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">👁️ View Details</a>
+          </td>
         </tr>
         `).join('')}
       </tbody>

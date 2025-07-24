@@ -1,0 +1,108 @@
+<%
+const title = 'Manager Dashboard - AssetFlow';
+const body = `
+<div class="mb-6">
+  <h2 class="text-2xl font-semibold">Welcome, ${user.full_name} 👋</h2>
+  <p class="text-gray-600">Manager Dashboard - ${user.department_name}</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-medium">Pending Requests</h3>
+    <p class="text-2xl font-bold text-yellow-500 mt-2">${pendingRequests.length}</p>
+  </div>
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-medium">Total Assets</h3>
+    <p class="text-2xl font-bold text-blue-700 mt-2">${totalAssets}</p>
+  </div>
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-medium">Assigned</h3>
+    <p class="text-2xl font-bold text-green-600 mt-2">${assignedAssets}</p>
+  </div>
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-medium">Available</h3>
+    <p class="text-2xl font-bold text-purple-500 mt-2">${availableAssets}</p>
+  </div>
+</div>
+
+<section class="mb-8">
+  <h3 class="text-xl font-semibold mb-4">Pending Requests</h3>
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-3 text-left">User</th>
+          <th class="p-3 text-left">Asset</th>
+          <th class="p-3 text-left">Type</th>
+          <th class="p-3 text-left">Date</th>
+          <th class="p-3 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y">
+        ${pendingRequests.map(req => `
+        <tr>
+          <td class="p-3">${req.user_name}</td>
+          <td class="p-3">${req.asset_name}</td>
+          <td class="p-3">
+            <span class="px-2 py-1 text-xs rounded ${req.request_type === 'assign' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'}">
+              ${req.request_type}
+            </span>
+          </td>
+          <td class="p-3">${new Date(req.request_date).toLocaleDateString()}</td>
+          <td class="p-3">
+            <form action="/approve-request" method="POST" class="inline mr-2">
+              <input type="hidden" name="request_id" value="${req.id}">
+              <input type="hidden" name="action" value="approve">
+              <button class="text-green-600 hover:underline text-sm">Approve</button>
+            </form>
+            <form action="/approve-request" method="POST" class="inline">
+              <input type="hidden" name="request_id" value="${req.id}">
+              <input type="hidden" name="action" value="reject">
+              <button class="text-red-600 hover:underline text-sm">Reject</button>
+            </form>
+          </td>
+        </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h3 class="text-xl font-semibold mb-4">User History</h3>
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-3 text-left">User</th>
+          <th class="p-3 text-left">Asset</th>
+          <th class="p-3 text-left">Action</th>
+          <th class="p-3 text-left">Date</th>
+          <th class="p-3 text-left">Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y">
+        ${userHistory.map(history => `
+        <tr>
+          <td class="p-3">${history.user_name}</td>
+          <td class="p-3">${history.asset_name}</td>
+          <td class="p-3">${history.request_type}</td>
+          <td class="p-3">${new Date(history.request_date).toLocaleDateString()}</td>
+          <td class="p-3">
+            <span class="px-2 py-1 text-xs rounded ${
+              history.status === 'approved' ? 'bg-green-100 text-green-800' : 
+              history.status === 'rejected' ? 'bg-red-100 text-red-800' : 
+              'bg-yellow-100 text-yellow-800'
+            }">
+              ${history.status}
+            </span>
+          </td>
+        </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  </div>
+</section>
+`;
+%>
+<%- include('layout', { title, body, showSidebar: true }) %>
